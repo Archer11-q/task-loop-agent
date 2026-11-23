@@ -1,11 +1,13 @@
 import argparse
-from storage import load_todos,save_todos
-from storage import TodoJsonCorruptError
+from storage import get_storage
+from exceptions import TodoStorageCorruptError
 from models import Todo
 
 """实现CLI工具：【添加】、【列出】、【完成】以及【删除】四条指令
     数据存文件内存
 """
+
+store = get_storage()
 
 def main():
     # 初始化命令行解析器，注册子命令add,list,finish,del
@@ -32,12 +34,12 @@ def main():
 
 
     try:
-        todos: list = load_todos()
+        todos: list = store.load_todos()
 
         # 路由分发
         if args.cmd=="add":
             todos.append(Todo(args.content,False))
-            save_todos(todos)
+            store.save_todos(todos)
             print(f"已添加：{args.content}")
 
         elif args.cmd=="list":
@@ -53,7 +55,7 @@ def main():
         elif args.cmd=="finish":
             if 0 <= args.id < len(todos):
                 todos[args.id].is_done = True
-                save_todos(todos)
+                store.save_todos(todos)
                 print(f"[已完成] {todos[args.id].content}")
             else:
                 print(f"未找到该待办: {args.id}")
@@ -62,11 +64,11 @@ def main():
             if 0 <= args.id < len(todos):
                 items=todos[args.id]
                 todos.pop(args.id)
-                save_todos(todos)
+                store.save_todos(todos)
                 print(f"[已删除] {items.content}")
             else:
                 print(f"未找到该待办: {args.id}")
-    except TodoJsonCorruptError:
+    except TodoStorageCorruptError:
         print("错误：待办文件损坏")
 
 if __name__ == "__main__":
