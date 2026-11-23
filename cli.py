@@ -3,7 +3,6 @@ from storage import load_todos,save_todos
 from storage import TodoJsonCorruptError
 from models import Todo
 
-
 """实现CLI工具：【添加】、【列出】、【完成】以及【删除】四条指令
     数据存文件内存
 """

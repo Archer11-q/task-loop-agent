@@ -7,9 +7,6 @@ from models import Todo
 TODO_FILE="todo.json"
 
 # 自定义异常
-class TodoFileNotFoundError(Exception):
-    pass
-
 class TodoJsonCorruptError(Exception):
     pass
 
