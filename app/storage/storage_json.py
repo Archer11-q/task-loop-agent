@@ -1,12 +1,13 @@
 import json
 from pathlib import Path
-from models import Todo
-from exceptions import TodoJsonCorruptError
+from app.models import Todo
+from app.exceptions import TodoJsonCorruptError
 
 """ 数据json持久化存储"""
 
 # 文件名称常量
-TODO_FILE=Path(__file__).resolve().parent.parent / "todo.json"
+BASE = Path(__file__).resolve().parent.parent.parent
+TODO_FILE = BASE / "data" / "todo.json"
 
 
 class StorageJson:

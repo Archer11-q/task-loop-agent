@@ -1,20 +1,24 @@
 import sqlite3
 import threading
 from pathlib import Path
-from models import Todo
-from exceptions import TodoSqliteCorruptError
+from app.models import Todo
+from app.exceptions import TodoSqliteCorruptError
 
 """ 数据Sqlite持久化"""
 
 # 数据库文件名
-DB_PATH = Path(__file__).resolve().parent.parent / "todo.db"
+BASE = Path(__file__).resolve().parent.parent.parent
+DB_PATH = BASE / "data" / "todo.db"
 
 
 class StorageSqlite:
     def __init__(self):
-        self.conn=sqlite3.connect(DB_PATH,check_same_thread=False)
         self.lock = threading.Lock()
-        self._init_table()
+        try:
+            self.conn=sqlite3.connect(DB_PATH,check_same_thread=False)
+            self._init_table()
+        except sqlite3.DatabaseError as e:
+            raise TodoSqliteCorruptError("sqlite数据损坏,打开失败")
 
     def _init_table(self):
         cur=self.conn.cursor()      # 从连接中取出游标

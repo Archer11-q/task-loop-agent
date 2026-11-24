@@ -1,6 +1,6 @@
 from .storage_json import StorageJson
 from .storage_sqlite import StorageSqlite
-from config import STORAGE_BACKEND
+from app.config import STORAGE_BACKEND
 
 """
     不管底下用哪个后端，外面的代码（main.py、api.py）

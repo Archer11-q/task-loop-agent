@@ -222,6 +222,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-todo.json
-todo.db
+data/
 .idea/
