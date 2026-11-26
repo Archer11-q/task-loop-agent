@@ -24,3 +24,7 @@ class AgentError(Exception):
 class AgentMaxTurnsError(AgentError):
     """达到最大轮数仍未首位：模型反复调工具，或工具一直失败"""
     pass
+
+
+class SessionStorageError(Exception):
+    """会话/消息持久化失败"""

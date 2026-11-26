@@ -1,5 +1,6 @@
 from .storage_json import StorageJson
 from .storage_sqlite import StorageSqlite
+from .storage_session import SessionStore     # 会话库，独立于 STORAGE_BACKEND
 from app.config import STORAGE_BACKEND
 
 """
