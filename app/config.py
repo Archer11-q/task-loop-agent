@@ -20,3 +20,7 @@ LLM_MODEL = os.getenv("LLM_MODEL") or "qwen3.7-flash"
 
 # agent循环：最大轮数，防止模型无限调工具
 AGENT_MAX_TURNS = int(os.getenv("AGENT_MAX_TURNS", "8"))
+
+# 上下文管理
+CONTEXT_BUDGET_TOKENS = int(os.getenv("CONTEXT_BUDGET_TOKENS", "6000"))
+KEEP_RECENT_BLOCKS = int(os.getenv("KEEP_RECENT_BLOCKS", "6"))

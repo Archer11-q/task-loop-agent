@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from openai import OpenAI
 from openai.types.chat import ChatCompletionMessage
 
@@ -31,7 +32,7 @@ def _to_message_dict(message: ChatCompletionMessage) -> dict:
        SDK对象不能直接放进messages传给接口，接口只认字典
        同时方便json.dumps序列化
     """
-    data:dict = {"role": "assistant", "content": message.content or ""}
+    data: dict = {"role": "assistant", "content": message.content or ""}
     if message.tool_calls:
         data["tool_calls"] = [
             {
@@ -47,17 +48,29 @@ def _to_message_dict(message: ChatCompletionMessage) -> dict:
     return data
 
 
-def chat(messages:list[dict],tools:list[dict] | None=None) ->dict:
+@dataclass
+class LLMReply:
+    """一次调用的结果：assistant 消息 + token用量
+
+    usage 存 API 返回的原值(prompt_tokens/completion_tokens/total_tokens)
+    """
+    message: dict
+    usage: dict = field(default_factory=dict)
+
+
+def chat(messages: list[dict], tools: list[dict] | None = None) -> LLMReply:
     """发一次chat.completions请求，返回assistant message的纯dict
        暂不做重试/超时/降级
     """
 
-    kwargs={
-        "model":LLM_MODEL,
-        "messages":messages,
-        "temperature":0,        # 低温拿到稳定回复
+    kwargs = {
+        "model": LLM_MODEL,
+        "messages": messages,
+        "temperature": 0,  # 低温拿到稳定回复
     }
-    if tools:   # 不能把None塞给SDK
-        kwargs["tools"]=tools
-    resp=get_client().chat.completions.create(**kwargs)
-    return _to_message_dict(resp.choices[0].message)
+    if tools:  # 不能把None塞给SDK
+        kwargs["tools"] = tools
+    resp = get_client().chat.completions.create(**kwargs)
+    # resp.usage在非流式下一定有；模型/网关异常可能为None
+    usage = resp.usage.model_dump() if resp.usage else {}
+    return LLMReply(message=_to_message_dict(resp.choices[0].message), usage=usage)
