@@ -12,11 +12,11 @@ from app.config import CONTEXT_BUDGET_TOKENS, KEEP_RECENT_BLOCKS
 ROUNDS = 30
 
 # 轮流问三类问题：各自会打中不同工具，让每轮都产生 tool 消息
-QUESTIONS = {
+QUESTIONS = [
     "现在几点了？",
     "我现在有几条待办？",
     "帮我算一下18*60-1080等于多少",
-}
+]
 
 
 def main() -> None:
